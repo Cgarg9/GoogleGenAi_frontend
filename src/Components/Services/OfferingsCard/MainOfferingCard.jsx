@@ -3,17 +3,17 @@ import OfferingCard from './OfferingCard';
 
 const cardData = [
   {
-    title: 'HeathCare Chatbot',
+    title: 'Noira',
     imageUrl: require("../../../Assets/chatbot.png")
   },
   {
-    title: 'User Diary',
-    imageUrl: require("../../../Assets/diary.jpg")
-  },
-  {
-    title: 'Mental Health Tracker',
+    title: 'MindSage',
     imageUrl: require("../../../Assets/mental-health.png"),
   },
+  {
+    title: 'Diary',
+    imageUrl: require("../../../Assets/diary-removebg-preview.png")
+  }
 ];
 
 function MainOfferingCard (){
@@ -23,7 +23,7 @@ function MainOfferingCard (){
       display: 'flex',
       justifyContent: 'center', // Center the cards in the container
       padding: '20px', // Add padding around the container
-      gap: '16px', // Space between the cards
+      gap: '30px', // Space between the cards
       flexWrap: 'wrap', // Allow cards to wrap if there's not enough space
     }}>
       {cardData.map((item, index) => (

@@ -2,6 +2,7 @@ import React from "react";
 import '../Style/NavBarStyle.css';
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import logo from "../Assets/logo.png"
 function Navbar() {
     const [logOut, setLogOut] = useState(false);
     useEffect(() => {
@@ -15,16 +16,17 @@ function Navbar() {
         <div className="custom-navbar">
             <div className="custom-nav-left">
                 <ul className="custom-nav-links">
-                    <li><Link to="/">Home Page</Link></li>
+                    <li><Link to="/"><img src={logo} alt="Logo" className="nav-logo" /></Link></li>
+
                 </ul>
             </div>
             <div className="custom-nav-right">
                 <ul className="custom-nav-links">
                     {logOut && 
                     <>
-                        <li><Link to="/chatbot">Chatbot</Link></li>
-                        <li><Link to="/rag">RAG</Link></li>
-                        <li><Link to="/diary">User Diary</Link></li>
+                        <li><Link to="/chatbot">Noira</Link></li>
+                        <li><Link to="/rag">MindSage</Link></li>
+                        <li><Link to="/diary">Diary</Link></li>
                     </>}
                     { !logOut &&
                     <>

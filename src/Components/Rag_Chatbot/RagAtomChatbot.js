@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 function RagAtomChatbot() {
 
-    const [messages, setMessages] = useState([{ sender: "bot", text: "Hello, how can I assist you today. You can interact with Atom Habits?" }]);
+    const [messages, setMessages] = useState([]);
     
     const [input, setInput] = useState('');
     const [isTyping, setIsTyping] = useState(false); // For typing simulation
@@ -26,6 +26,9 @@ function RagAtomChatbot() {
         const user = JSON.parse(localStorage.getItem('userDetails'));
         if (user) {
             setUserEmail(user.email);
+            setMessages([
+                { sender: "bot", text: `Hi ${user.name}, I am MindSage, your personal guide through Atomic Habits Book – a source of wisdom and guidance. This book offers a powerful guide that explores the science of habit formation and personal transformation through small, consistent actions. How can I assist you today in finding insights from its teachings!` }
+            ]);
         }
         const originalUid = uuidv4();
         setUserSessionId(originalUid);

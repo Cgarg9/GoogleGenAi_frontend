@@ -2,11 +2,12 @@
 import React from "react";
 import Introduction from "./Intro";
 import Services from "./Services/services";
+import InfoCard from "./InfoCard";
 
 function LandingPage(){
     return(
         <div>
-            <Introduction/>
+            <InfoCard/>
             <Services/>
         </div>
     );

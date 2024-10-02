@@ -1,10 +1,10 @@
 /* Ensure full width and height for the page */
-html, body {
+.external-chatbot-container{
     height: 70%;
     margin: 0;
     font-family: 'Arial', sans-serif;
     background-color: #f1f1f1;
-  }
+}
   
   /* Full-screen container with flexbox */
   .chatbot-container {
@@ -40,7 +40,7 @@ html, body {
   }
   
   .user-message {
-    background-color: #007bff;
+    background-color: #2c4f40;
     color: #ffffff;
     align-self: flex-end;
     box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
@@ -75,7 +75,7 @@ html, body {
   }
   
   textarea:focus {
-    border: 1px solid #007bff;
+    border: 1px solid #2c4f40;
   }
   
   /* Adjust the height of the text area as the text grows */
@@ -86,7 +86,7 @@ html, body {
   /* Send button styling */
   .chat-button {
     padding: 15px 20px;
-    background-color: #007bff;
+    background-color: #2c4f40;
     color: white;
     border: none;
     border-radius: 25px;
@@ -96,7 +96,7 @@ html, body {
   }
   
   .chat-button:hover {
-    background-color: #0056b3;
+    background-color: #254c3b;
   }
   
   /* Scrollbar customization for the chat window */

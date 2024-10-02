@@ -4,12 +4,6 @@ import axios from 'axios';
 import { Alert } from "antd";
 
 function Chatbot() {
-  const [messages, setMessages] = useState(() => {
-    const storedMessages = localStorage.getItem('chatMessages');
-    return storedMessages ? JSON.parse(storedMessages) : [
-      { sender: "bot", text: "Hello, how can I assist you today?" }
-    ];
-  });
   
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false); // For typing simulation
@@ -17,23 +11,32 @@ function Chatbot() {
   const [userChatMessages, setUserChatMessages] = useState([]);
   const [userEmail, setUserEmail] = useState('');
   const [emptyFieldAlert, setEmptyFieldAlert] = useState(false);
-  
-  useEffect(() => {
-    chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
-    localStorage.setItem('chatMessages', JSON.stringify(messages));
-  }, [messages]);
+  const [messages, setMessages] = useState(null); // Start with null to indicate "not yet set"
 
+  // Fetch user data and set messages when userName is available
   useEffect(() => {
     const userChat = JSON.parse(localStorage.getItem('chatMessages'));
     const user = JSON.parse(localStorage.getItem('userDetails'));
-    if (userChat) {
-        setUserChatMessages(userChat);
+
+    if (userChat && userChat.length > 0) {
+      setUserChatMessages(userChat);
+      setMessages(userChat);  // Load previous chat messages if available
+    } else if (user) {
+      // If there are no chat messages, set the welcome message
+      setMessages([
+        { sender: "bot", text: `Hi ${user.name}! I am Noira, your personal guide to navigating thoughts and feelings. What would you like to chat about today?` }
+      ]);
     }
-    if (user) {
-        setUserEmail(user.email);
+  }, []);  // Runs once after the component mounts
+
+  // This useEffect ensures that messages are stored in localStorage only after they've been set
+  useEffect(() => {
+    if (messages !== null) { // Only store messages if they've been initialized
+      localStorage.setItem('chatMessages', JSON.stringify(messages));
+      chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
     }
-  }, []);
-  
+  }, [messages]);
+
   const handleTextInputChange = (e) => {
     setInput(e.target.value);
     setEmptyFieldAlert(false);
@@ -61,27 +64,27 @@ function Chatbot() {
   };
 
   const handleSendMessage = async () => {
-    if(input.trim() === ''){
+    if (input.trim() === '') {
       setEmptyFieldAlert(true);
       return;
     }
     try {
       const newMessages = [...messages, { sender: "user", text: input }];
-      setMessages(newMessages);
+      setMessages(newMessages);  // Update messages state with new user message
       setInput('');
       
       // Show typing simulation
       setIsTyping(true);
 
       // Delay before sending request to the backend
-      await new Promise(resolve => setTimeout(resolve, 200)); //delay
+      await new Promise(resolve => setTimeout(resolve, 200)); // delay
 
-      const chatPairs = convertChatDataToPairs(userChatMessages);
-      const userChatData = {'email' : userEmail, 'user_query' : input,'session_history' : chatPairs};
+      const chatPairs = convertChatDataToPairs(newMessages);  // Pass the updated messages
+      const userChatData = {'email': userEmail, 'user_query': input, 'session_history': chatPairs};
       const response = await axios.post("http://localhost:5000/user_chat_response", userChatData);
 
       let botResponse = '';
-      if(response.status === 200){
+      if (response.status === 200) {
         botResponse = response.data.bot_response;
       }
 
@@ -91,7 +94,7 @@ function Chatbot() {
         ...newMessages, 
         { sender: "bot", text: botResponse }
       ];
-      setMessages(updatedMessages);
+      setMessages(updatedMessages);  // Update messages state with bot response
     }
     catch(error){
       console.log(error);
@@ -106,32 +109,34 @@ function Chatbot() {
   };
 
   return (
-    <div className="chatbot-container">
-      <div className="chat-window" ref={chatWindowRef}>
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`message ${msg.sender === "user" ? "user-message" : "bot-message"}`}
-          >
-            <p>{msg.text}</p>
-          </div>
-        ))}
-        {isTyping && (
-          <div className="message bot-message">
-            <p><i>Typing...</i></p> {/* Typing effect */}
-          </div>
-        )}
-      </div>
-      {emptyFieldAlert && <Alert message={"Please input a valid Message"} type="warning" />} 
-      <div className="input-container">
-        <textarea
-          value={input}
-          onChange={handleTextInputChange}
-          onKeyDown={handleKeyDown}
-          placeholder="Type your message..."
-          rows={1}
-        />
-        <button className='chat-button' onClick={handleSendMessage}>Send</button>
+    <div className='external-chatbot-container'>
+      <div className="chatbot-container">
+        <div className="chat-window" ref={chatWindowRef}>
+          {messages && messages.map((msg, index) => (
+            <div
+              key={index}
+              className={`message ${msg.sender === "user" ? "user-message" : "bot-message"}`}
+            >
+              <p>{msg.text}</p>
+            </div>
+          ))}
+          {isTyping && (
+            <div className="message bot-message">
+              <p><i>Typing...</i></p> {/* Typing effect */}
+            </div>
+          )}
+        </div>
+        {emptyFieldAlert && <Alert message={"Please input a valid Message"} type="warning" />} 
+        <div className="input-container">
+          <textarea
+            value={input}
+            onChange={handleTextInputChange}
+            onKeyDown={handleKeyDown}
+            placeholder="Type your message..."
+            rows={1}
+          />
+          <button className='chat-button' onClick={handleSendMessage}>Send</button>
+        </div>
       </div>
     </div>
   );
