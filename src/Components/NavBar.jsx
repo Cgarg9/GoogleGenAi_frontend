@@ -10,7 +10,7 @@ function Navbar() {
         if (user) {
             setLogOut(true);
         }
-        }, []);
+    }, []);
 
     return (
         <div className="custom-navbar">
