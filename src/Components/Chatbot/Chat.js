@@ -21,7 +21,8 @@ function Chatbot() {
     if (userChat && userChat.length > 0) {
       setUserChatMessages(userChat);
       setMessages(userChat);  // Load previous chat messages if available
-    } else if (user) {
+    } if (user) {
+      setUserEmail(user.email);
       // If there are no chat messages, set the welcome message
       setMessages([
         { sender: "bot", text: `Hi ${user.name}! I am Noira, your personal guide to navigating thoughts and feelings. What would you like to chat about today?` }
